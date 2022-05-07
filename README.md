@@ -49,3 +49,59 @@
 
 ## **View**
 - `Model`에 담겨있는 데어티를 사용해서 화면을 그리는 일에 집중한다.
+
+## **MVC 패턴의 한계**
+1. **`forward(request , response)` 중복**
+    - `View`로 이동하는 코드가 항상 중복 호출
+
+```java
+  RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+  dispatcher.forward(request , response);
+```
+
+2. **`ViewPath`에 중복**
+    - **prefix** : `/WEB-INF/views`
+    - **suffix** : `.jsp`
+      - 만약 `.jsp`를 타임리프로 바꿔야 한다면 모든 코드를 다 변경해야 한다.
+
+```java
+  String viewPath = "/WEB-INF/views/new-form.jsp";
+```
+
+3. **공통 처리가 어렵다**
+    - 단순히 공통 기능을 메서드로 추출해내면 될 것 같지만 , 결과적으로 공통 메서드를 항상 호출해야 하고 , 실수로 호출하지 않으면 문제가 된다
+      - **호출하는 것 자체도 중복이다**
+    - 위의 문제를 해결하려면 `Controller`호출 전에 먼저 공통 기능을 처리해야 한다.
+    - **Front Controller 패턴**을 도입하면 이런 문제를 깔끔하게 해결할 수 있다.
+      - *Spring MVC의 핵심도 바로 이 `Front Controller`에 있다*
+
+## Form Action **절대 경로**
+- `현재 URL이 속한 계층 경로` + `/save`
+
+```html
+    <!-- 상대경로 사용 -->
+    <form action="save" method="post">
+        username: <input type="text" name="username" />
+        age: <input type="text" name="age" />
+        <button type="submit">전송</button>
+    </form>
+```
+
+## WEB-INF 폴더
+- 외부에서 직접적으로 호출하지 못하게 , `Controller`에서 접근할 때 **WEB-INF**안에 페이지를 넣는다면 외부에서 직접 찾지는 못한다.
+
+## RequestDispatcher
+
+- `dispatcher.forward(request , response);`
+  - 다른 서블릿이나 JSP로 이동할 수 있게 서버 내부에서 재호출 
+- `forward`
+  - **서버 내부에서 일어나는 호출**이기 때문에 클라이언트가 전혀 인지하지 못 한다.
+- `redirect`
+  - **실제 클라이언트(웹 브라우저)** 에 응답이 나갔다가 , **클라이언트가 `redirect`경로로 다시 요청**한다.
+  - **URL**경로도 변경된다.
+
+```java
+    String viewPath = "/WEB-INF/views/new-form.jsp";
+    RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+    dispatcher.forward(request , response);
+```
