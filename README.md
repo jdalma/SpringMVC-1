@@ -106,3 +106,17 @@
     RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
     dispatcher.forward(request , response);
 ```
+
+***
+
+# Chapter3. MVC 프레임워크 만들기
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc_v1.png)
+
+## **FrontController패턴**
+- `Front Controller` **서블릿 하나**로 클라이언트의 요청을 받는다
+- Front Controller가 **요청에 맞는 `Controller`를 찾아 호출**
+- Front Controller를 제외한 **나머지 `Controller`는 서블릿을 사용하지 않아도 된다**
+- 스프링 웹 MVC의 `DispatcherServlet`이 **FrontController** 패턴으로 구현되어 있다
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/frontController.png)
