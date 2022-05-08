@@ -22,9 +22,10 @@
 # [Chapter2. Servlet , JSP , MVC Pattern](https://github.com/jdalma/SpringMVC-1/pull/2)
 
 1. [Member (In Memory) 도메인 및 테스트 코드 추가](https://github.com/jdalma/SpringMVC-1/pull/2/commits/a0f659ca3b26e24fc6e4c9ec46ee91835d1e371c)
-2. [Servlet으로 회원 관리 생성](https://github.com/jdalma/SpringMVC-1/pull/2/commits/c358fd1bf0825479d9d6248749029ddddb6b8efa)
-3. [gradle JSP 추가](https://github.com/jdalma/SpringMVC-1/pull/2/commits/6c9300c84fc5fdd0e113c530fa98d11d5a24c973)
-4. [JSP로 회원 관리 생성](https://github.com/jdalma/SpringMVC-1/pull/2/commits/313c5f90d2070fdde98ebe9d8763beebd2e2b531)
+2. [gradle JSP 추가](https://github.com/jdalma/SpringMVC-1/pull/2/commits/6c9300c84fc5fdd0e113c530fa98d11d5a24c973)
+3. [Servlet으로 회원 관리](https://github.com/jdalma/SpringMVC-1/pull/2/commits/c358fd1bf0825479d9d6248749029ddddb6b8efa)
+4. [JSP로 회원 관리](https://github.com/jdalma/SpringMVC-1/pull/2/commits/313c5f90d2070fdde98ebe9d8763beebd2e2b531)
+5. [MVC 패턴으로 회원관리](https://github.com/jdalma/SpringMVC-1/pull/2/commits/68b96b4bfad2257eac741055e538cc14ffb99ecd)
 
 ## **서블릿과JSP의 한계**
 - 서블릿으로 개발할 때는 `뷰(View)`화면을 위한 HTML을 만드는 작업이 자바 코드에 섞여서 지저분하고 복잡했다.
