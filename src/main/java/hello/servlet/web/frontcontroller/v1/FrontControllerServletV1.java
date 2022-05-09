@@ -21,7 +21,7 @@ public class FrontControllerServletV1 extends HttpServlet {
     private Map<String , ControllerV1> controllerV1Map = new HashMap<>();
 
     public FrontControllerServletV1() {
-        // 다형성을 활용
+        // 2022.05.10 다형성을 활용
         controllerV1Map.put("/front-controller/v1/members/new-form" , new MemberFormControllerV1());
         controllerV1Map.put("/front-controller/v1/members/save" , new MemberSaveControllerV1());
         controllerV1Map.put("/front-controller/v1/members" , new MemberListControllerV1());
