@@ -111,11 +111,14 @@
 
 # Chapter3. MVC 프레임워크 만들기
 
+## [Version 1. Front Controller 도입](https://github.com/jdalma/SpringMVC-1/pull/4/commits/c63752bb81e031386fd2835e12e4552e1f06f9c7)
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc_v1.png)
 
-## [V1 - Front Controller 도입](https://github.com/jdalma/SpringMVC-1/pull/4/commits/c63752bb81e031386fd2835e12e4552e1f06f9c7)
 
-![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc_v2.png)
+## [Version 2. View 분리](https://github.com/jdalma/SpringMVC-1/pull/4/commits/3be2a2184cd46fff812d45bf38b4aa5a60d9b7c6)
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v2.png)
+
+
 
 ## **FrontController패턴**
 - `Front Controller` **서블릿 하나**로 클라이언트의 요청을 받는다
