@@ -113,37 +113,9 @@
 
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc_v1.png)
 
-```java
-// /front-controller/v1/ 에 속해 있는 요청들은 모두 여기서 처리한다
-@WebServlet(name = "frontControllerServletV1" , urlPatterns = ("/front-controller/v1/*"))
-public class FrontControllerServletV1 extends HttpServlet {
+## [V1 - Front Controller 도입](https://github.com/jdalma/SpringMVC-1/pull/4/commits/c63752bb81e031386fd2835e12e4552e1f06f9c7)
 
-    private Map<String , ControllerV1> controllerV1Map = new HashMap<>();
-
-    public FrontControllerServletV1() {
-        // 다형성을 활용
-        controllerV1Map.put("/front-controller/v1/members/new-form" , new MemberFormControllerV1());
-        controllerV1Map.put("/front-controller/v1/members/save" , new MemberSaveControllerV1());
-        controllerV1Map.put("/front-controller/v1/members" , new MemberListControllerV1());
-    }
-
-    @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String requestURI = request.getRequestURI();
-        System.out.println("FrontController-V1" + requestURI);
-        ControllerV1 controller = controllerV1Map.get(requestURI);
-
-        if(controller == null){
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        controller.process(request , response);
-    }
-}
-
-```
-
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc_v2.png)
 
 ## **FrontController패턴**
 - `Front Controller` **서블릿 하나**로 클라이언트의 요청을 받는다
