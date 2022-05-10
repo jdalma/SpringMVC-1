@@ -118,7 +118,26 @@
 ## [Version 2. View 분리](https://github.com/jdalma/SpringMVC-1/pull/4/commits/3be2a2184cd46fff812d45bf38b4aa5a60d9b7c6)
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v2.png)
 
+```java
+  String viewPath = "/WEB-INF/views/new-form.jsp";
+  RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+  dispatcher.forward(request, response);
+```
 
+- 이 부분을 분리하기 위해 별도로 뷰를 처리하는 객체를 생성
+
+## [Version 3. Model 추가]()
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v3.png)
+
+- **서블릿 종속성 제거**
+  - 우리가 구현하는 컨트롤러가 서블릿 기술을 전혀 사용하지 않도록 변경해보자
+- **뷰 이름 중복 제거**
+  - `/WEB-INF/views/new-form.jsp` → **new-form** 
+  - `/WEB-INF/views/save-result.jsp` → **save-result** 
+  - `/WEB-INF/views/members.jsp` → **members**
+  - 컨트롤러에서 지정하는 뷰 이름에 중복이 있는 것을 확인할 수 있다
+  - 컨트롤러는 **뷰의 논리 이름*
 
 ## **FrontController패턴**
 - `Front Controller` **서블릿 하나**로 클라이언트의 요청을 받는다
