@@ -115,7 +115,7 @@
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc_v1.png)
 
 
-## [Version 2. View 분리](https://github.com/jdalma/SpringMVC-1/pull/4/commits/3be2a2184cd46fff812d45bf38b4aa5a60d9b7c6)
+## [Version 2. View 분리 ➔ `MyView` 추가](https://github.com/jdalma/SpringMVC-1/pull/4/commits/3be2a2184cd46fff812d45bf38b4aa5a60d9b7c6)
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v2.png)
 
 ```java
@@ -126,7 +126,7 @@
 
 - 이 부분을 분리하기 위해 별도로 뷰를 처리하는 객체를 생성
 
-## [Version 3. Model 추가]()
+## [Version 3. Model 추가 ➔ `ModelView` , `ViewResolver` 추가](https://github.com/jdalma/SpringMVC-1/pull/4/commits/684a2eae06ea9d3372a76eae8d3298a5b9fdd1f6)
 
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v3.png)
 
@@ -137,7 +137,23 @@
   - `/WEB-INF/views/save-result.jsp` → **save-result** 
   - `/WEB-INF/views/members.jsp` → **members**
   - 컨트롤러에서 지정하는 뷰 이름에 중복이 있는 것을 확인할 수 있다
-  - 컨트롤러는 **뷰의 논리 이름*
+  - 컨트롤러는 **뷰의 논리 이름**을 반환하고 실제 물리 위치의 이름은 프론트 컨트롤러에서 처리하도록 단순화
+- **`ModelView` 추가**
+  - `request.setAttribute()`를 통해 데이터를 저장하고 뷰에 전달했다
+  - **서블릿의 종속성을 제거하기 위해** `Model`을 직접 만들고 , 추가로 `View` 이름까지 전달하는 객체를 추가
+- **`ViewResolver` 메서드 추가**
+  - `MyView view = viewResolver(viewName)`
+  - 컨트롤러가 반환한 논리 뷰 이름을 실제 물리 뷰 경로로 변경한다. 
+  - 그리고 실제 물리 경로가 있는 MyView 객체를 반환한다.
+  - **논리 뷰 이름** : `members`
+  - **물리 뷰 경로** : `/WEB-INF/views/members.jsp`
+
+
+## Version 4. 단순하고 실용적인 컨트롤러
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v4.png)
+
+- 기본적인 구조는 V3와 같다. 대신에 Controller가 ModelView를 반환하지 않고 , `ViewName`만 반환한다. 
 
 ## **FrontController패턴**
 - `Front Controller` **서블릿 하나**로 클라이언트의 요청을 받는다
