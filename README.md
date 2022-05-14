@@ -76,6 +76,14 @@
     - **Front Controller 패턴**을 도입하면 이런 문제를 깔끔하게 해결할 수 있다.
       - *Spring MVC의 핵심도 바로 이 `Front Controller`에 있다*
 
+## **FrontController 패턴 등장**
+- `Front Controller` **서블릿 하나**로 클라이언트의 요청을 받는다
+- Front Controller가 **요청에 맞는 `Controller`를 찾아 호출**
+- Front Controller를 제외한 **나머지 `Controller`는 서블릿을 사용하지 않아도 된다**
+- 스프링 웹 MVC의 `DispatcherServlet`이 **FrontController** 패턴으로 구현되어 있다
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/frontController.png)
+
 ## Form Action **절대 경로**
 - `현재 URL이 속한 계층 경로` + `/save`
 
@@ -88,10 +96,10 @@
     </form>
 ```
 
-## WEB-INF 폴더
+## **WEB-INF 폴더**
 - 외부에서 직접적으로 호출하지 못하게 , `Controller`에서 접근할 때 **WEB-INF**안에 페이지를 넣는다면 외부에서 직접 찾지 못한다.
 
-## RequestDispatcher
+## **RequestDispatcher**
 
 - `dispatcher.forward(request , response);`
   - 다른 서블릿이나 JSP로 이동할 수 있게 서버 내부에서 재호출 
@@ -149,16 +157,30 @@
   - **물리 뷰 경로** : `/WEB-INF/views/members.jsp`
 
 
-## Version 4. 단순하고 실용적인 컨트롤러
+## [Version 4. 단순하고 실용적인 컨트롤러 ➔ `ModelView` 제거 , 경로만 반환](https://github.com/jdalma/SpringMVC-1/pull/4/commits/ea38e5ac4f5c421af8469244d58b86bc512758ec)
 
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v4.png)
 
-- 기본적인 구조는 V3와 같다. 대신에 Controller가 ModelView를 반환하지 않고 , `ViewName`만 반환한다. 
+- 앞서 만든 `Version 3`은 **서블릿 종속성을 제거**하고 , **View 경로 중복을 제거**하는 등 잘 설계된 컨트롤러 이다.
+- *하지만 항상 `ModelView`객체를 생성하고 반환해야 하는 부분이 조금 번거롭다*
+- 기본적인 구조는 V3와 같지만 매우 편리하게 수정해보자
+- Controller가 ModelView를 반환하지 않고 , `ViewName`만 반환한다. 
 
-## **FrontController패턴**
-- `Front Controller` **서블릿 하나**로 클라이언트의 요청을 받는다
-- Front Controller가 **요청에 맞는 `Controller`를 찾아 호출**
-- Front Controller를 제외한 **나머지 `Controller`는 서블릿을 사용하지 않아도 된다**
-- 스프링 웹 MVC의 `DispatcherServlet`이 **FrontController** 패턴으로 구현되어 있다
+## [Version 5. 유연한 컨트롤러 ➔ `Adapter Pattern` 적용](https://github.com/jdalma/SpringMVC-1/pull/4/commits/24da6233e11d245d57f26972606fa5ad39186410)
 
-![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/frontController.png)
+- 지금까지 우리가 개발한 `Front Controller`는 한 가지 방식의 `Controller Interface`만 사용할 수 있다.
+  - *`ControllerV3` , `ControllerV4`*는 완전히 다른 인터페이스 이다
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v5.png)
+
+- `Adapter Pattern`을 사용해서 `Front Controller`가 다양한 방식의 `Controller`를 처리할 수 있도록 변경해보자
+- **Handler Adapter**
+  - 이 `Handler Adapter`덕분에 다양한 종류의 `Controller`를 호출할 수 있다.
+  - `Adapter`는 실제 `Controller`를 호출하고 , 그 결과로 `ModelView`를 반환해야 한다
+    - `ModelView`를 반환하지 못하면 , **해당 `Adapter`가 `ModelView`를 직접 생성해서라도 반환해야 한다**
+  - 이전에는 `Front Controller`가 실제 `Controller`를 호출했지만 이제는 이 **`Adapter`**를 통해서 호출한다
+- **Handler**
+  - `Controller`의 이름을 더 넓은 범위인 **Handler**로 변경했다
+- 이제 **`Adapter`가 있기 때문에 `Controller`의 개념 뿐만 아니라 어떠한 것이든 해당하는 종류의 `Adapter`만 있으면 다 처리할 수 있다**
+
+## **Adapter Pattern** 🚩
