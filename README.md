@@ -169,7 +169,7 @@
 ## [Version 5. 유연한 컨트롤러 ➔ `Adapter Pattern` 적용](https://github.com/jdalma/SpringMVC-1/pull/4/commits/24da6233e11d245d57f26972606fa5ad39186410)
 
 - 지금까지 우리가 개발한 `Front Controller`는 한 가지 방식의 `Controller Interface`만 사용할 수 있다.
-  - *`ControllerV3` , `ControllerV4`*는 완전히 다른 인터페이스 이다
+  - *`ControllerV3` , `ControllerV4`는 완전히 다른 인터페이스 이다*
 
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v5.png)
 
@@ -178,7 +178,7 @@
   - 이 `Handler Adapter`덕분에 다양한 종류의 `Controller`를 호출할 수 있다.
   - `Adapter`는 실제 `Controller`를 호출하고 , 그 결과로 `ModelView`를 반환해야 한다
     - `ModelView`를 반환하지 못하면 , **해당 `Adapter`가 `ModelView`를 직접 생성해서라도 반환해야 한다**
-  - 이전에는 `Front Controller`가 실제 `Controller`를 호출했지만 이제는 이 **`Adapter`**를 통해서 호출한다
+  - 이전에는 `Front Controller`가 실제 `Controller`를 호출했지만 이제는 이 **`Adapter`를 통해서 호출한다**
 - **Handler**
   - `Controller`의 이름을 더 넓은 범위인 **Handler**로 변경했다
 - 이제 **`Adapter`가 있기 때문에 `Controller`의 개념 뿐만 아니라 어떠한 것이든 해당하는 종류의 `Adapter`만 있으면 다 처리할 수 있다**
