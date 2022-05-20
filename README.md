@@ -134,7 +134,7 @@
 
 - 이 부분을 분리하기 위해 별도로 뷰를 처리하는 객체를 생성
 
-## [Version 3. Model 추가 ➔ `ModelView` , `ViewResolver` 추가](https://github.com/jdalma/SpringMVC-1/pull/4/commits/684a2eae06ea9d3372a76eae8d3298a5b9fdd1f6)
+## [Version 3. Model 추가 ➔ `ModelView` , `ViewResolver` 추가 (서블릿 종속성 , 뷰 이름 중복 제거)](https://github.com/jdalma/SpringMVC-1/pull/4/commits/684a2eae06ea9d3372a76eae8d3298a5b9fdd1f6)
 
 ![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/mvc-v3.png)
 
@@ -184,3 +184,151 @@
 - 이제 **`Adapter`가 있기 때문에 `Controller`의 개념 뿐만 아니라 어떠한 것이든 해당하는 종류의 `Adapter`만 있으면 다 처리할 수 있다**
 
 ## **Adapter Pattern** 🚩
+
+***
+
+# Chapter4. MVC 구조 이해
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/spring-mvc-structure.png)
+
+|직접 만든 프레임 워크|스프링 MVC|
+|------|---|
+|FrontController|DispatcherServlet|
+|handlerMappingMap|HandlerMapping| 
+|MyHandlerAdapter| HandlerAdapter| 
+|ModelView |ModelAndView| 
+|viewResolver| ViewResolver|
+|MyView| View|
+
+
+## **`DispatcherServlet` 구조 살펴보기 → 스프링 MVC의 핵심** ⭐️
+- `org.springframework.web.servlet.DispatcherServlet`
+
+![](https://raw.githubusercontent.com/jdalma/jdalma.github.io/master/assets/images/spring-mvc/dispatcherServletClassDiagram.png)
+
+1. **핸들러 조회** : 핸들러 매핑을 통해 요청 URL에 `매핑된 핸들러(컨트롤러)를 조회`한다.
+2. **핸들러 어댑터 조회** : 핸들러를 실행할 수 있는 `핸들러 어댑터를 조회`한다.
+3. **핸들러 어댑터 실행** : `핸들러 어댑터를 실행`한다.
+4. **핸들러 실행** : 핸들러 어댑터가 `실제 핸들러(컨트롤러)를 실행`한다.
+5. **ModelAndView 반환** : 핸들러 어댑터는 핸들러(컨트롤러)가 반환하는 정보를 `ModelAndView로 변환해서 반환`한다.
+6. **viewResolver 호출** : `뷰 리졸버를 찾고 실행`한다.
+    - *JSP의 경우: `InternalResourceViewResolver` 가 자동 등록되고, 사용된다.*
+7. **View반환** : `viewResolver`는 뷰의 논리 이름을 물리 이름으로 바꾸고 , 렌더링 역할을 담당하는 `뷰 객체를 반환`한다.
+   - *JSP의 경우 `InternalResourceView(JstlView)` 를 반환하는데, 내부에 `forward()` 로직이 있다.*
+8. **뷰 렌더링** : 뷰를 통해서 뷰를 렌더링한다.
+
+- `DispatcherServlet`도 **부모 클래스 에서 `HttpServlet`을 상속 받아서 사용하고 , 서블릿으로 동작한다**
+- 스프링 부트는 `DispatcherServlet`을 *서블릿으로 자동으로 등록*하면서 **모든 경로 `urlPatterns="/"`** 에 대해서 매핑한다
+  - 서블릿으로 등록하는 방법은 여러 가지가 있다
+  - *더 자세한 경로가 우선순위가 높다*
+
+- **주요 인터페이스 목록**
+  - 핸들러 매핑 : `org.springframework.web.servlet.HandlerMapping`
+  - 핸들러 어댑터: `org.springframework.web.servlet.HandlerAdapter`
+  - 뷰 리졸버: `org.springframework.web.servlet.ViewResolver`
+  - 뷰: `org.springframework.web.servlet.View`
+        
+ 
+
+### 요청 흐름
+
+1. 서블릿이 호출되면 `HttpServlet`이 제공하는 `service()`가 호출된다
+2. 스프링 MVC는 `DispatcherServlet`의 부모인 `FrameworkServlet`에서 `service()`를 **오버라이드**해두었다.
+
+```java
+	/**
+	 * Override the parent class implementation in order to intercept PATCH requests.
+	 */
+	@Override
+	protected void service(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		HttpMethod httpMethod = HttpMethod.resolve(request.getMethod());
+		if (httpMethod == HttpMethod.PATCH || httpMethod == null) {
+			processRequest(request, response);
+		}
+		else {
+			super.service(request, response);
+		}
+	}
+```
+
+3. `FrameworkServlet.service()`를 시작으로 여러 메서드가 호출되면서 **`DispatcherServlet.doDispatch()`가 호출된다**
+
+```java
+    protected void doDispatch(HttpServletRequest request, HttpServletResponse
+    response) throws Exception {
+        HttpServletRequest processedRequest = request;
+        HandlerExecutionChain mappedHandler = null;
+        ModelAndView mv = null;
+        // 1. 핸들러 조회
+        mappedHandler = getHandler(processedRequest); if (mappedHandler == null) {
+            noHandlerFound(processedRequest, response);
+            return; 
+        }
+
+        //2.핸들러 어댑터 조회-핸들러를 처리할 수 있는 어댑터
+        HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+
+        // 3. 핸들러 어댑터 실행 
+        // 4. 핸들러 어댑터를 통해 핸들러 실행 
+        // 5. ModelAndView 반환 mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+        processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
+    }
+
+    private void processDispatchResult(HttpServletRequest request, HttpServletResponse response, HandlerExecutionChain mappedHandler, ModelAndView mv, Exception exception) throws Exception {
+        ...
+        
+        // 뷰 렌더링 호출
+        render(mv, request, response);
+        
+        ...
+    }
+
+    protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ...
+
+        View view;
+        // 6. 뷰 리졸버를 통해서 뷰 찾기
+        // 7.View 반환
+        String viewName = mv.getViewName(); 
+        view = resolveViewName(viewName, mv.getModelInternal(), locale, request);
+        
+        // 8. 뷰 렌더링
+        view.render(mv.getModelInternal(), request, response);
+
+        ...
+    }
+```
+
+- 핸들러가 없다면 !!!
+
+```java
+    protected void noHandlerFound(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (pageNotFoundLogger.isWarnEnabled()) {
+			pageNotFoundLogger.warn("No mapping for " + request.getMethod() + " " + getRequestUri(request));
+		}
+		if (this.throwExceptionIfNoHandlerFound) {
+			throw new NoHandlerFoundException(request.getMethod(), getRequestUri(request),
+					new ServletServerHttpRequest(request).getHeaders());
+		}
+		else {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		}
+	}
+```
+
+- 핸들러가 있으면 `private List<HandlerAdapter> handlerAdapters`에서 **Adapter**를 찾는다
+
+```java
+	protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
+		if (this.handlerAdapters != null) {
+			for (HandlerAdapter adapter : this.handlerAdapters) {
+				if (adapter.supports(handler)) {
+					return adapter;
+				}
+			}
+		}
+		throw new ServletException("No adapter for handler [" + handler + "]: The DispatcherServlet configuration needs to include a HandlerAdapter that supports this handler");
+	}
+```
