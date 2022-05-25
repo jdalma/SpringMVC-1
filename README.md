@@ -9,7 +9,7 @@
 5. [HttpServletResponse Header , Cookie , Redirect , MessageBody 테스트](https://github.com/jdalma/SpringMVC-1/pull/1/commits/a0e20215ea0bab3c62bdfbbb2926538f5ef4b5b8)
 6. [HTTP 응답 -> HTML , JSON형식](https://github.com/jdalma/SpringMVC-1/pull/1/commits/cf0200acae0889e41afc3fe296f457cddd7e47dd)
 
-- **HTTP 요청 메세지** 로그로 확인하기
+- **HTTP 요청 메세지** 로그로 확s인하기
   - `logging.level.org.apache.coyote.http11=debug `
 - `application/json` 은 스펙상 **utf-8** 형식을 사용하도록 정의되어 있다.
 - 그래서 스펙에서 `charset=utf-8` 과 같은 추가 파라미터를 지원하지 않는다. 따라서 `application/json` 이라고만 사용해야지
@@ -464,7 +464,7 @@ spring.mvc.view.suffix=.jsp
 > - `Thymeleaf` 뷰 템플릿을 사용하면 `ThymeleafViewResolver` 를 등록해야 한다.
 > - *최근에는 라이브러리만 추가하면 스프링 부트가 이런 작업도 모두 자동화해준다.*
 
-## [스프링 MVC 시작하기 - `@Controller` , `@RequestMapping`](https://github.com/jdalma/SpringMVC-1/pull/5/commits/6e1bd06224f3c33080712b415ce54460e73b784b)
+## [Version 1. 스프링 MVC 시작하기 - `@Controller` , `@RequestMapping` 적용](https://github.com/jdalma/SpringMVC-1/pull/5/commits/6e1bd06224f3c33080712b415ce54460e73b784b)
 
 ### `@Controller`
 - 내부에 `@Component` Annotation이 있어서 컴포넌트의 스캔의 대상이 되어 빈으로 등록된다
@@ -494,3 +494,10 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 }
 ```
+
+## [Version 2. 스프링 MVC - `@RequestMapping` 클래스 단위 → 메서드 단위](https://github.com/jdalma/SpringMVC-1/pull/5/commits/f98acf00594fcc08aa745ac8b85864addcda2d4d)
+
+- `@Controller` , `@Component` , `직접 빈으로 등록` 하는 3가지 방법 다 가능하다
+
+## [Version 3. 스프링 MVC - `Model` , `@RequestParam` , `@GetMapping` , `@PostMapping` , ViewName 직접 반환](https://github.com/jdalma/SpringMVC-1/pull/5/commits/7a2e1a4a41a57f3d0943962ac920ab8f1a689688)
+
