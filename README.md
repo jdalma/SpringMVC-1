@@ -501,3 +501,37 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 ## [Version 3. 스프링 MVC - `Model` , `@RequestParam` , `@GetMapping` , `@PostMapping` , ViewName 직접 반환](https://github.com/jdalma/SpringMVC-1/pull/5/commits/7a2e1a4a41a57f3d0943962ac920ab8f1a689688)
 
+***
+
+# [Chapter5. 기본 기능](https://github.com/jdalma/SpringMVC-1.5/pull/1)
+
+## [로깅 간단히 알아보기](https://github.com/jdalma/SpringMVC-1.5/pull/1/commits/ec09e0a9a2c710f3a5e933d730289f376f5b7332)
+- 로그 라이브러리는 `Logback` , `Log4J` , `Log4J2` 등등 수 많은 라이브러리가 있는데, 그것을 **통합해서 인터페이스로 제공하는 것이 바로 `SLF4J` 라이브러리다**
+  - `SLF4J`는 인터페이스고, 그 구현체로 `Logback`같은 로그 라이브러리를 선택하면 된다
+- 스프링 부트 로그 레벨 설정
+  - **LEVEL** : `TRACE` > `DEBUG` > `INFO (default)` > `WARN` > `ERROR`
+- **상황에 따라 로그 레벨을 설정할 수 있다**
+- 시스템 아웃 콘솔에만 출력하는 것이 아니라, 파일이나 네트워크 등, 로그를 별도의 위치에 남길 수 있다. 
+  - *특히 파일로 남길 때는 일별, 특정 용량에 따라 **로그를 분할하는 것도 가능**하다.*
+- 로그에 대해서 더 자세한 내용은 slf4j, logback을 검색해보자. 
+  - [SLF4J](http://www.slf4j.org)
+  - [Logback](http://logback.qos.ch)
+- [스프링 부트가 제공하는 로그 기능](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging)
+
+```
+#global.properties
+#hello.springmvc 패키지와 그 하위 로그 레벨 설정
+logging.level.hello.springmvc=trace
+```
+
+- **아래와 같은 문자열 연산을 사용하지 말자**
+- `TRACE`가 찍힐 단계가 아니여도 해당 문자열 연산은 실행된다
+  - *CPU , 메모리 낭비*
+
+```java
+  // X
+  log.trace("trace log = " + name);
+
+  // O
+  log.trace("trace log = {}" , name);
+```
